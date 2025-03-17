@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "mod.arcomit.surpass.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "surpass.refmap.json",
+  "mixins": [
+    "LockOnManagerMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
