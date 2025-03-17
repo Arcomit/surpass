@@ -5,6 +5,8 @@ import mod.arcomit.surpass.client.ClientConfig;
 import mod.arcomit.surpass.client.registry.Keys;
 import mod.arcomit.surpass.network.ConfigSyncPacket;
 import mod.arcomit.surpass.network.NetworkHandler;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -21,6 +23,14 @@ public class ToggleLockOnStateEvent {
             ClientConfig.ENABLES_ENEMY_LOCKON.save();
             ConfigSyncPacket packet = new ConfigSyncPacket();
             NetworkHandler.INSTANCE.sendToServer(packet);//同步配置到服务器
+
+            if (Minecraft.getInstance().player != null) {
+                Minecraft.getInstance().player.displayClientMessage(
+                        Component.literal("索敌功能: "
+                                + (ClientConfig.ENABLES_ENEMY_LOCKON.get() ? "开启" : "关闭")),
+                        true
+                );
+            }
         }
     }
 }
