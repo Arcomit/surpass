@@ -12,6 +12,7 @@ public class Config {
     private static final ForgeConfigSpec.DoubleValue CROSSHAIR_MAX_DIST;
     private static final ForgeConfigSpec.DoubleValue CROSSHAIR_MAX_ANGLE;
     private static final ForgeConfigSpec.DoubleValue NEAREST_MAX_DIST;
+    private static final ForgeConfigSpec.DoubleValue LOCKON_ROTATION_SPEED;
 
     public static final ForgeConfigSpec SPEC;
 
@@ -30,6 +31,9 @@ public class Config {
         // 最近索敌距离
         NEAREST_MAX_DIST = builder.comment("The maximum distance of the nearest lock-on.[Default:32.0,Original Resharped:16.0]")
                 .defineInRange("nearestMaxDist", 32.0d,0.0D,200.0D);
+        // 最近索敌距离
+        LOCKON_ROTATION_SPEED = builder.comment("The rotation speed of the lock-on.[Default:1.0]")
+                .defineInRange("nearestMaxDist", 1.0d,0.0D,8.0D);
         builder.pop();
         SPEC = builder.build();
     }
@@ -38,6 +42,7 @@ public class Config {
     public static double crosshairMaxDist;
     public static double crosshairMaxAngle;
     public static double nearestMaxDist;
+    public static double targetLockRotationSpeed;
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
@@ -46,5 +51,6 @@ public class Config {
         crosshairMaxDist = CROSSHAIR_MAX_DIST.get();
         crosshairMaxAngle = CROSSHAIR_MAX_ANGLE.get();
         nearestMaxDist = NEAREST_MAX_DIST.get();
+        targetLockRotationSpeed = LOCKON_ROTATION_SPEED.get();
     }
 }

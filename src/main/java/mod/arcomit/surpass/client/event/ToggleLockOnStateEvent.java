@@ -1,5 +1,6 @@
 package mod.arcomit.surpass.client.event;
 
+import mod.arcomit.surpass.Config;
 import mod.arcomit.surpass.Surpass;
 import mod.arcomit.surpass.client.ClientConfig;
 import mod.arcomit.surpass.client.registry.Keys;
@@ -26,8 +27,8 @@ public class ToggleLockOnStateEvent {
 
             if (Minecraft.getInstance().player != null) {
                 Minecraft.getInstance().player.displayClientMessage(
-                        Component.literal("索敌功能: "
-                                + (ClientConfig.ENABLES_ENEMY_LOCKON.get() ? "开启" : "关闭")),
+                        Component.literal(Config.enablesEnemyLockOnSwitch ? ("索敌功能: "
+                                + (ClientConfig.ENABLES_ENEMY_LOCKON.get() ? "开启" : "关闭")) : "该功能没有被启用！！！"),
                         true
                 );
             }
