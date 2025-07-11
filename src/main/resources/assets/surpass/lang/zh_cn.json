@@ -1,5 +1,13 @@
 {
   //按键
   "category.surpass": "超限",
-  "key.surpass.toggle_lockon_on_off": "开启/关闭索敌"
+  "key.surpass.toggle_lockon_on_off": "开启/关闭索敌",
+  "key.surpass.toggle_interrupt_combos": "打断连招",
+
+  //本地化
+  "surpass.lockon_switch": "索敌功能: %1$s",
+  "surpass.interrupt_combos": "打断连招功能: %1$s",
+  "surpass.disable": "该功能服务器没有被启用！！！",
+  "surpass.on": "开启",
+  "surpass.off": "关闭"
 }

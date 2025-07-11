@@ -6,7 +6,7 @@ import mod.arcomit.surpass.event.ConfigPersistenceEvent;
 import mod.arcomit.surpass.utils.FindEntityHelper;
 import mods.flammpfeil.slashblade.ability.LockOnManager;
 import mods.flammpfeil.slashblade.capability.inputstate.CapabilityInputState;
-import mods.flammpfeil.slashblade.event.InputCommandEvent;
+import mods.flammpfeil.slashblade.event.handler.InputCommandEvent;
 import mods.flammpfeil.slashblade.item.ItemSlashBlade;
 import mods.flammpfeil.slashblade.util.InputCommand;
 import net.minecraft.client.Minecraft;
@@ -17,6 +17,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.TickEvent;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -30,7 +32,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 public abstract class LockOnManagerMixin {
 
     @Inject(
-            method = "onInputChange(Lmods/flammpfeil/slashblade/event/InputCommandEvent;)V",
+            method = "onInputChange",
             at = @At("HEAD"),
             cancellable = true,
             remap = false
@@ -76,6 +78,7 @@ public abstract class LockOnManagerMixin {
             cancellable = true,
             remap = false
     )
+    @OnlyIn(Dist.CLIENT)
     private void disableLockOnLogic(TickEvent.RenderTickEvent event, CallbackInfo ci) {
         ci.cancel();
         //我在写屎山，我讨厌Mixin

@@ -20,5 +20,9 @@ public class NetworkHandler {
                 ConfigSyncPacket::encode,
                 ConfigSyncPacket::decode,
                 ConfigSyncPacket.Handler::handle);
+        INSTANCE.registerMessage(id++, InterruptCombosPacket.class,
+                InterruptCombosPacket::encode,
+                InterruptCombosPacket::decode,
+                InterruptCombosPacket.Handler::handle);
     }
 }

@@ -31,6 +31,7 @@ java {
 minecraft {
     mappings channel: mapping_channel, version: mapping_version
     copyIdeResources = true
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
     runs {
         configureEach {
             workingDirectory project.file('run')
@@ -93,7 +94,9 @@ dependencies {
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
     //拔刀剑：重锋
-    implementation fg.deobf("curse.maven:slashblade-resharped-1022428:6313956")
+    implementation fg.deobf("curse.maven:slashblade-resharped-1022428:6737015")
+    //暮色森林
+    implementation fg.deobf("curse.maven:the-twilight-forest-227639:5468648")
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
