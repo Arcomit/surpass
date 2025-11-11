@@ -29,6 +29,7 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.util.EnumSet;
 
+@SuppressWarnings("removal")
 @Mod.EventBusSubscriber(modid = Surpass.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class AirTrickDodgeEvent {
     final static EnumSet<InputCommand> move = EnumSet.of(InputCommand.FORWARD, InputCommand.BACK, InputCommand.LEFT,

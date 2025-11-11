@@ -1,0 +1,20 @@
+{
+  //キーバインディング
+  "category.surpass": "超過",
+  "key.surpass.toggle_lockon_on_off": "ロックオン切り替え（ON/OFF）",
+  "key.surpass.toggle_sneaking_no_backoff_on_off": "スニーク時の縁保護無効化切り替え（ON/OFF）",
+  "key.surpass.interrupt_combos": "コンボ中断",
+
+  //ローカライゼーション
+  "surpass.lockon_switch": "ロックオン機能: %1$s",
+  "surpass.sneaking_no_backoff_switch": "スニーク時の縁保護無効化機能: %1$s",
+  "surpass.interrupt_combos": "コンボ中断機能: %1$s",
+  "surpass.disable": "※この機能はサーバーで有効化されていません！！！",
+  "surpass.on": "有効",
+  "surpass.off": "無効",
+
+  //所有者メッセージ
+  "surpass.sword.owner.other": "汝は我が主にあらず",
+  "surpass.sword.owner.name": "所有者: %s",
+  "surpass.blade.owner.cannot_take": "汝は我が主にあらず！"
+}

@@ -1,0 +1,20 @@
+{
+  //按鍵
+  "category.surpass": "超限",
+  "key.surpass.toggle_lockon_on_off": "開啟/關閉索敵",
+  "key.surpass.toggle_sneaking_no_backoff_on_off": "開啟/關閉潛行無邊緣保護",
+  "key.surpass.interrupt_combos": "打斷連招",
+
+  //本地化
+  "surpass.lockon_switch": "索敵功能: %1$s",
+  "surpass.sneaking_no_backoff_switch": "潛行無邊緣保護功能: %1$s",
+  "surpass.interrupt_combos": "打斷連招功能: %1$s",
+  "surpass.disable": "該功能伺服器沒有被啟用！！！",
+  "surpass.on": "開啟",
+  "surpass.off": "關閉",
+
+  //所有者提示
+  "surpass.sword.owner.other": "汝非吾主",
+  "surpass.sword.owner.name": "主人: %s",
+  "surpass.blade.owner.cannot_take": "汝非吾主！"
+}

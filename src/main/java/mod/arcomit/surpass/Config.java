@@ -18,6 +18,11 @@ public class Config {
     private static final ForgeConfigSpec.BooleanValue ENABLES_INTERRUPT_COMBOS;
     private static final ForgeConfigSpec.DoubleValue SLOW_DOWN_ATTENUATION_VALUE;
     private static final ForgeConfigSpec.DoubleValue SLOW_DOWN_ATTENUATION_MAX_VALUE;
+    private static final ForgeConfigSpec.BooleanValue ENABLES_FORTUNE_DROP;
+    private static final ForgeConfigSpec.BooleanValue ENABLES_CHANGE_CARRY_TYPE;
+    private static final ForgeConfigSpec.BooleanValue ENABLES_BIND_OWNER;
+    private static final ForgeConfigSpec.BooleanValue ENABLES_S_RANK_BOOST;
+    private static final ForgeConfigSpec.BooleanValue ENABLES_SNEAKING_NO_BACKOFF_SWITCH;
     public static final ForgeConfigSpec SPEC;
 
     static {
@@ -53,6 +58,21 @@ public class Config {
         // 缓降衰减最大值
         SLOW_DOWN_ATTENUATION_MAX_VALUE = builder.comment("Slow down attenuation max value.[Default:0.6]")
                 .defineInRange("slowDownAttenuationMaxValue", 0.6d,0.0D,1.0D);
+        // 开启时运掉落装备功能？
+        ENABLES_FORTUNE_DROP = builder.comment("Enable fortune drop equipment?[Default:true]")
+                .define("enablesFortuneDrop", true);
+        // 开启携带类型切换功能？
+        ENABLES_CHANGE_CARRY_TYPE = builder.comment("Enable the carry type switching function?[Default:true]")
+                .define("enablesChangeCarryType", true);
+        // 开启绑定主人功能？
+        ENABLES_BIND_OWNER = builder.comment("Enable bind owner function?[Default:true]")
+                .define("enablesBindOwner", true);
+        // 开启S评分强化功能？
+        ENABLES_S_RANK_BOOST = builder.comment("Enable S-Rank Boost function?[ Default:true]")
+                .define("enablesSRankBoost", true);
+        // 开启潜行时无保护切换功能？
+        ENABLES_SNEAKING_NO_BACKOFF_SWITCH = builder.comment("Enable the sneaking no back-off switch?[Default:true]")
+                .define("enablesSneakingNoBackOffSwitch", true);
         builder.pop();
         SPEC = builder.build();
     }
@@ -67,6 +87,11 @@ public class Config {
     public static boolean enablesInterruptCombos;
     public static double slowDownAttenuationValue;
     public static double slowDownAttenuationMaxValue;
+    public static boolean enablesFortuneDrop;
+    public static boolean enablesChangeCarryType;
+    public static boolean enablesBindOwner;
+    public static boolean enablesSRankBoost;
+    public static boolean enablesSneakingNoBackOffSwitch;
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
@@ -81,5 +106,10 @@ public class Config {
         enablesInterruptCombos = ENABLES_INTERRUPT_COMBOS.get();
         slowDownAttenuationValue = SLOW_DOWN_ATTENUATION_VALUE.get();
         slowDownAttenuationMaxValue = SLOW_DOWN_ATTENUATION_MAX_VALUE.get();
+        enablesFortuneDrop = ENABLES_FORTUNE_DROP.get();
+        enablesChangeCarryType = ENABLES_CHANGE_CARRY_TYPE.get();
+        enablesBindOwner = ENABLES_BIND_OWNER.get();
+        enablesSRankBoost = ENABLES_S_RANK_BOOST.get();
+        enablesSneakingNoBackOffSwitch = ENABLES_SNEAKING_NO_BACKOFF_SWITCH.get();
     }
 }

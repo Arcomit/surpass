@@ -10,17 +10,24 @@ import java.util.function.Supplier;
 public class ConfigSyncPacket {
 
     private boolean enablesEnemyLockOn;
+    private boolean enablesSneakingNoBackOff;
 
     public ConfigSyncPacket() {
         enablesEnemyLockOn = ClientConfig.ENABLES_ENEMY_LOCKON.get();
+        enablesSneakingNoBackOff = ClientConfig.ENABLES_SNEAKING_NO_BACKOFF.get();
     }
 
     public boolean getEnablesEnemyLockOn() {
         return enablesEnemyLockOn;
     }
 
+    public boolean getEnablesSneakingNoBackOff() {
+        return enablesSneakingNoBackOff;
+    }
+
     public void encode(FriendlyByteBuf buffer) {
         buffer.writeBoolean(enablesEnemyLockOn);
+        buffer.writeBoolean(enablesSneakingNoBackOff);
     }
 
     public static ConfigSyncPacket decode(FriendlyByteBuf buffer) {
@@ -36,6 +43,8 @@ public class ConfigSyncPacket {
                 if (player != null) {
                     // 存储到玩家的持久化数据中
                     player.getPersistentData().putBoolean("enablesEnemyLockOn", msg.getEnablesEnemyLockOn());
+                    player.getPersistentData().putBoolean("enablesSneakingNoBackOff", msg.getEnablesSneakingNoBackOff());
+
                 }
             });
             ctx.get().setPacketHandled(true);

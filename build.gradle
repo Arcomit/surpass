@@ -35,6 +35,7 @@ minecraft {
     runs {
         configureEach {
             workingDirectory project.file('run')
+            jvmArgs '-XX:+AllowEnhancedClassRedefinition'
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
             // Mixin
@@ -94,7 +95,7 @@ dependencies {
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
     //拔刀剑：重锋
-    implementation fg.deobf("curse.maven:slashblade-resharped-1022428:6737015")
+    implementation fg.deobf("curse.maven:slashblade-resharped-1022428:7194599")
     //暮色森林
     implementation fg.deobf("curse.maven:the-twilight-forest-227639:5468648")
 }

@@ -1,0 +1,20 @@
+{
+  //Key Bindings
+  "category.surpass": "Surpass",
+  "key.surpass.toggle_lockon_on_off": "Toggle Lock-on On/Off",
+  "key.surpass.toggle_sneaking_no_backoff_on_off": "Toggle Sneaking No Backoff On/Off",
+  "key.surpass.interrupt_combos": "Interrupt Combos",
+
+  //Localization
+  "surpass.lockon_switch": "Lock-on Function: %1$s",
+  "surpass.sneaking_no_backoff_switch": "Sneaking No Backoff Function: %1$s",
+  "surpass.interrupt_combos": "Interrupt Combos Function: %1$s",
+  "surpass.disable": "This feature is NOT enabled on the server!!!",
+  "surpass.on": "ON",
+  "surpass.off": "OFF",
+
+  //Owner Messages
+  "surpass.sword.owner.other": "Thou art not my master",
+  "surpass.sword.owner.name": "Owner: %s",
+  "surpass.blade.owner.cannot_take": "Thou art not my master!"
+}

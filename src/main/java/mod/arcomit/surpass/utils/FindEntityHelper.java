@@ -8,12 +8,29 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.entity.PartEntity;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
 
 public class FindEntityHelper {
+
+    /**
+     * 递归获取 PartEntity 的最顶层父实体
+     * @param entity 要检查的实体
+     * @return 最顶层的父实体，如果输入不是 PartEntity 则返回自身
+     */
+    private static Entity getTopParent(Entity entity) {
+        if (entity instanceof PartEntity<?>) {
+            Entity parent = ((PartEntity<?>) entity).getParent();
+            if (parent != null) {
+                return getTopParent(parent); // 递归查找
+            }
+        }
+        return entity;
+    }
+
     // 寻找离玩家准心最近的实体，MaxAngle为搜索角度，MaxDist为最大索敌距离
     public static Entity findClosestToCrosshair(Player player, double maxAngle, double maxDist) {
         final Vec3 eyePos = player.getEyePosition(1.0f);
@@ -30,7 +47,15 @@ public class FindEntityHelper {
         );
 
         return candidates.stream()
+                // 第一步：先将 PartEntity 转换为最顶层父实体
+                .map(entity -> getTopParent(entity))
+                .distinct() // 去重，避免同一个实体的多个部分被重复计算
                 .filter(entity -> {
+                    // 只处理 LivingEntity
+                    if (!(entity instanceof LivingEntity)) {
+                        return false;
+                    }
+
                     // 快速距离检查
                     Vec3 entityPos = entity.getBoundingBox().getCenter();
                     Vec3 toEntity = entityPos.subtract(eyePos);
@@ -43,10 +68,8 @@ public class FindEntityHelper {
                     return actualCos >= cosThreshold;
                 })
                 .filter(entity -> {
-                    if (entity instanceof LivingEntity){
-                        return TargetSelector.test.test(player, (LivingEntity) entity);
-                    }
-                    return false;
+                    // TargetSelector 测试
+                    return TargetSelector.test.test(player, (LivingEntity) entity);
                 })
                 .filter(entity -> {
                     // 延迟视线检测到最后阶段
@@ -79,17 +102,27 @@ public class FindEntityHelper {
                 player.getX() + radius, player.getY() + radius, player.getZ() + radius
         );
 
-        Predicate<Entity> finalFilter = entity ->
-                entity != player &&
-                        entity.isAlive() &&
-                        entity.isPickable() &&
-                        (entity instanceof LivingEntity ? TargetSelector.test.test(player, (LivingEntity) entity) : false);
+        Predicate<Entity> finalFilter = entity -> {
+            if (entity == player || !entity.isAlive() || !entity.isPickable()) {
+                return false;
+            }
+
+            // 获取最顶层的父实体（处理多层 PartEntity 嵌套）
+            Entity topParent = getTopParent(entity);
+
+            return topParent instanceof LivingEntity &&
+                   TargetSelector.test.test(player, (LivingEntity) topParent);
+        };
 
         // 获取候选实体列表
         List<Entity> candidates = player.level().getEntities(player, area, finalFilter);
 
         // 流式处理找到最近实体
         return candidates.stream()
+                .map(entity -> getTopParent(entity)) // 转换为最顶层父实体
+                .distinct() // 去重
+                .filter(entity -> entity instanceof LivingEntity) // 确保是 LivingEntity
+                .filter(entity -> TargetSelector.test.test(player, (LivingEntity) entity)) // 再次确认可攻击
                 .min(Comparator.comparingDouble(e ->
                         player.distanceToSqr(e) // 使用平方距离避免开方计算
                 ))

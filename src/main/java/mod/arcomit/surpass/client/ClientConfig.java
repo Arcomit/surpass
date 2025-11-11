@@ -11,6 +11,7 @@ import net.minecraftforge.fml.event.config.ModConfigEvent;
 public class ClientConfig {
     // client
     public static ForgeConfigSpec.BooleanValue ENABLES_ENEMY_LOCKON;
+    public static ForgeConfigSpec.BooleanValue ENABLES_SNEAKING_NO_BACKOFF;
 
     public static final ForgeConfigSpec SPEC;
 
@@ -19,6 +20,8 @@ public class ClientConfig {
         builder.push("Auto-Targeting Setting");
         ENABLES_ENEMY_LOCKON = builder.comment("Enable the enemy lock-on?[Default:true]")
                 .define("enablesEnemyLockOn", true);
+        ENABLES_SNEAKING_NO_BACKOFF = builder.comment("Enable the sneaking no backoff?[Default:true]")
+                .define("enablesSneakingNoBackOff", true);
         builder.pop();
         SPEC = builder.build();
     }

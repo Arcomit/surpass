@@ -6,9 +6,12 @@
   "refmap": "surpass.refmap.json",
   "mixins": [
     "LockOnManagerMixin",
-    "FallHandlerMixin"
-  ],
+    "FallHandlerMixin",
+    "BladeStandEntityMixin",
+    "PlayerMixin"
+    ],
   "client": [
+    "ItemSlashBladeMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -1,0 +1,20 @@
+{
+  //Привязки клавиш
+  "category.surpass": "Трансцендентный",
+  "key.surpass.toggle_lockon_on_off": "Вкл/Выкл автозахват",
+  "key.surpass.toggle_sneaking_no_backoff_on_off": "Вкл/Выкл подкрадывание без защиты края",
+  "key.surpass.interrupt_combos": "Прервать комбо",
+
+  //Локализация
+  "surpass.lockon_switch": "Автозахват: %1$s",
+  "surpass.sneaking_no_backoff_switch": "Подкрадывание без защиты края: %1$s",
+  "surpass.interrupt_combos": "Прерывание комбо: %1$s",
+  "surpass.disable": "Функция отключена на сервере!!!",
+  "surpass.on": "Включено",
+  "surpass.off": "Выключено",
+
+  //Сообщения владельца
+  "surpass.sword.owner.other": "Ты не мой хозяин",
+  "surpass.sword.owner.name": "Владелец: %s",
+  "surpass.blade.owner.cannot_take": "Ты не мой хозяин!"
+}
