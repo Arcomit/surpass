@@ -96,10 +96,8 @@ dependencies {
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
     //拔刀剑：重锋
     implementation fg.deobf("curse.maven:slashblade-resharped-1022428:7194599")
-    //暮色森林
     implementation fg.deobf("curse.maven:the-twilight-forest-227639:5468648")
 }
-
 // This block of code expands all declared replace properties in the specified resource targets.
 // A missing property will result in an error. Properties are expanded using ${} Groovy notation.
 // When "copyIdeResources" is enabled, this will also run before the game launches in IDE environments.

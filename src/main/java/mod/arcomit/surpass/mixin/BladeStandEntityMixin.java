@@ -23,8 +23,7 @@ public abstract class BladeStandEntityMixin {
     @Inject(
             method = "interact",
             at = @At("HEAD"),
-            cancellable = true,
-            remap = false
+            cancellable = true
     )
     private void preventOwnerBladeRemoval(@NotNull Player player, @NotNull InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
         if (!Config.enablesBindOwner) {
