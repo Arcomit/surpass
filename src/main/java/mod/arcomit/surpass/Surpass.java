@@ -26,6 +26,6 @@ public class Surpass {
     }
 
     public static ResourceLocation prefix(String path) {
-        return ResourceLocation.fromNamespaceAndPath(Surpass.MODID, path);
+        return new ResourceLocation(Surpass.MODID, path);
     }
 }
