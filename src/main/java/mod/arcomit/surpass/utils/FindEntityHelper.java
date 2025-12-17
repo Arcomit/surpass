@@ -12,12 +12,70 @@ import net.minecraftforge.entity.PartEntity;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.function.Predicate;
 
+/**
+ * 实体查找辅助工具类
+ * 提供基于准心和距离的实体搜索功能
+ */
 public class FindEntityHelper {
 
     /**
+     * 寻找离玩家准心最近的实体
+     * 
+     * @param player   玩家实体
+     * @param maxAngle 搜索角度（度数）
+     * @param maxDist  最大索敌距离
+     * @return 最接近准心的实体，未找到则返回 null
+     */
+    public static Entity findClosestToCrosshair(Player player, double maxAngle, double maxDist) {
+        final Vec3 eyePos = player.getEyePosition(1.0f);
+        final Vec3 lookVec = player.getLookAngle().normalize();
+        final double cosThreshold = Math.cos(Math.toRadians(maxAngle));
+        final double maxDistSqr = maxDist * maxDist;
+
+        List<Entity> candidates = getInitialCandidates(player, eyePos, maxDist, maxDistSqr);
+
+        return candidates.stream()
+                .map(FindEntityHelper::getTopParent)
+                .distinct()
+                .filter(entity -> isLivingEntityInAngle(entity, eyePos, lookVec, cosThreshold))
+                .filter(entity -> TargetSelector.test.test(player, (LivingEntity) entity))
+                .filter(entity -> hasLineOfSight(player, eyePos, entity))
+                .min(Comparator.comparingDouble(entity -> 
+                        calculateCrosshairDistance(entity, eyePos, lookVec)))
+                .orElse(null);
+    }
+
+    /**
+     * 寻找离玩家最近的实体
+     * 
+     * @param player 玩家实体
+     * @param radius 搜索半径
+     * @return 最近的实体，未找到则返回 null
+     */
+    public static Entity findNearestEntity(Player player, double radius) {
+        if (player == null || !player.isAlive()) {
+            return null;
+        }
+
+        AABB searchArea = createSearchArea(player, radius);
+        List<Entity> candidates = player.level().getEntities(player, searchArea, 
+                entity -> isValidCandidate(entity, player));
+
+        return candidates.stream()
+                .map(FindEntityHelper::getTopParent)
+                .distinct()
+                .filter(entity -> entity instanceof LivingEntity)
+                .filter(entity -> TargetSelector.test.test(player, (LivingEntity) entity))
+                .min(Comparator.comparingDouble(player::distanceToSqr))
+                .orElse(null);
+    }
+
+    // ==================== 私有辅助方法 ====================
+
+    /**
      * 递归获取 PartEntity 的最顶层父实体
+     *
      * @param entity 要检查的实体
      * @return 最顶层的父实体，如果输入不是 PartEntity 则返回自身
      */
@@ -25,107 +83,96 @@ public class FindEntityHelper {
         if (entity instanceof PartEntity<?>) {
             Entity parent = ((PartEntity<?>) entity).getParent();
             if (parent != null) {
-                return getTopParent(parent); // 递归查找
+                return getTopParent(parent);
             }
         }
         return entity;
     }
 
-    // 寻找离玩家准心最近的实体，MaxAngle为搜索角度，MaxDist为最大索敌距离
-    public static Entity findClosestToCrosshair(Player player, double maxAngle, double maxDist) {
-        final Vec3 eyePos = player.getEyePosition(1.0f);
-        final Vec3 lookVec = player.getLookAngle().normalize();
-        final double cosThreshold = Math.cos(Math.toRadians(maxAngle));
-        final double maxDistSqr = maxDist * maxDist; // 与AABB.inflate(100)匹配的平方距离
-
-        List<Entity> candidates = player.level().getEntitiesOfClass(
+    /**
+     * 获取初始候选实体列表
+     */
+    private static List<Entity> getInitialCandidates(Player player, Vec3 eyePos, 
+                                                      double maxDist, double maxDistSqr) {
+        return player.level().getEntitiesOfClass(
                 Entity.class,
                 new AABB(eyePos, eyePos).inflate(maxDist),
                 entity -> entity.isAlive()
                         && entity.isPickable()
                         && eyePos.distanceToSqr(entity.position()) <= maxDistSqr
         );
-
-        return candidates.stream()
-                // 第一步：先将 PartEntity 转换为最顶层父实体
-                .map(entity -> getTopParent(entity))
-                .distinct() // 去重，避免同一个实体的多个部分被重复计算
-                .filter(entity -> {
-                    // 只处理 LivingEntity
-                    if (!(entity instanceof LivingEntity)) {
-                        return false;
-                    }
-
-                    // 快速距离检查
-                    Vec3 entityPos = entity.getBoundingBox().getCenter();
-                    Vec3 toEntity = entityPos.subtract(eyePos);
-                    double distSqr = toEntity.lengthSqr();
-                    if (distSqr < 0.0001) return false;
-
-                    // 角度筛选（使用平方比较优化）
-                    double projection = toEntity.dot(lookVec);
-                    double actualCos = projection / Math.sqrt(distSqr);
-                    return actualCos >= cosThreshold;
-                })
-                .filter(entity -> {
-                    // TargetSelector 测试
-                    return TargetSelector.test.test(player, (LivingEntity) entity);
-                })
-                .filter(entity -> {
-                    // 延迟视线检测到最后阶段
-                    Vec3 entityPos = entity.getBoundingBox().getCenter();
-                    return player.level().clip(
-                            new ClipContext(
-                                    eyePos, entityPos,
-                                    ClipContext.Block.VISUAL,
-                                    ClipContext.Fluid.NONE,
-                                    player
-                            )
-                    ).getType() != HitResult.Type.BLOCK;
-                })
-                .min(Comparator.comparingDouble(entity -> {
-                    // 最终距离计算（基于准星的垂直距离）
-                    Vec3 entityPos = entity.getBoundingBox().getCenter();
-                    Vec3 closestPoint = eyePos.add(lookVec.scale(lookVec.dot(entityPos.subtract(eyePos))));
-                    return entityPos.distanceToSqr(closestPoint);
-                }))
-                .orElse(null);
     }
 
-    // 寻找离玩家最近的实体，Radius为搜索半径
-    public static Entity findNearestEntity(Player player, double radius) {
-        if (player == null || !player.isAlive()) return null;
+    /**
+     * 检查实体是否在视角范围内且为 LivingEntity
+     */
+    private static boolean isLivingEntityInAngle(Entity entity, Vec3 eyePos, 
+                                                  Vec3 lookVec, double cosThreshold) {
+        if (!(entity instanceof LivingEntity)) {
+            return false;
+        }
 
-        // 创建搜索范围（以玩家为中心的正方体）
-        AABB area = new AABB(
+        Vec3 entityPos = entity.getBoundingBox().getCenter();
+        Vec3 toEntity = entityPos.subtract(eyePos);
+        double distSqr = toEntity.lengthSqr();
+        
+        if (distSqr < 0.0001) {
+            return false;
+        }
+
+        double projection = toEntity.dot(lookVec);
+        double actualCos = projection / Math.sqrt(distSqr);
+        
+        return actualCos >= cosThreshold;
+    }
+
+    /**
+     * 检查玩家与实体之间是否有视线（无方块阻挡）
+     */
+    private static boolean hasLineOfSight(Player player, Vec3 eyePos, Entity entity) {
+        Vec3 entityPos = entity.getBoundingBox().getCenter();
+        ClipContext context = new ClipContext(
+                eyePos, entityPos,
+                ClipContext.Block.VISUAL,
+                ClipContext.Fluid.NONE,
+                player
+        );
+        
+        return player.level().clip(context).getType() != HitResult.Type.BLOCK;
+    }
+
+    /**
+     * 计算实体到准心视线的垂直距离（平方）
+     */
+    private static double calculateCrosshairDistance(Entity entity, Vec3 eyePos, Vec3 lookVec) {
+        Vec3 entityPos = entity.getBoundingBox().getCenter();
+        Vec3 toEntity = entityPos.subtract(eyePos);
+        double projection = lookVec.dot(toEntity);
+        Vec3 closestPoint = eyePos.add(lookVec.scale(projection));
+        
+        return entityPos.distanceToSqr(closestPoint);
+    }
+
+    /**
+     * 创建以玩家为中心的搜索区域
+     */
+    private static AABB createSearchArea(Player player, double radius) {
+        return new AABB(
                 player.getX() - radius, player.getY() - radius, player.getZ() - radius,
                 player.getX() + radius, player.getY() + radius, player.getZ() + radius
         );
+    }
 
-        Predicate<Entity> finalFilter = entity -> {
-            if (entity == player || !entity.isAlive() || !entity.isPickable()) {
-                return false;
-            }
+    /**
+     * 检查实体是否为有效的候选目标
+     */
+    private static boolean isValidCandidate(Entity entity, Player player) {
+        if (entity == player || !entity.isAlive() || !entity.isPickable()) {
+            return false;
+        }
 
-            // 获取最顶层的父实体（处理多层 PartEntity 嵌套）
-            Entity topParent = getTopParent(entity);
-
-            return topParent instanceof LivingEntity &&
-                   TargetSelector.test.test(player, (LivingEntity) topParent);
-        };
-
-        // 获取候选实体列表
-        List<Entity> candidates = player.level().getEntities(player, area, finalFilter);
-
-        // 流式处理找到最近实体
-        return candidates.stream()
-                .map(entity -> getTopParent(entity)) // 转换为最顶层父实体
-                .distinct() // 去重
-                .filter(entity -> entity instanceof LivingEntity) // 确保是 LivingEntity
-                .filter(entity -> TargetSelector.test.test(player, (LivingEntity) entity)) // 再次确认可攻击
-                .min(Comparator.comparingDouble(e ->
-                        player.distanceToSqr(e) // 使用平方距离避免开方计算
-                ))
-                .orElse(null);
+        Entity topParent = getTopParent(entity);
+        return topParent instanceof LivingEntity 
+                && TargetSelector.test.test(player, (LivingEntity) topParent);
     }
 }

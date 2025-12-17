@@ -12,7 +12,8 @@
     ],
   "client": [
     "ItemSlashBladeMixin",
-    "BladeFirstPersonRenderMixin"
+    "BladeFirstPersonRenderMixin",
+    "LocalPlayerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

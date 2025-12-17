@@ -23,6 +23,7 @@ public class Config {
     private static final ForgeConfigSpec.BooleanValue ENABLES_BIND_OWNER;
     private static final ForgeConfigSpec.BooleanValue ENABLES_S_RANK_BOOST;
     private static final ForgeConfigSpec.BooleanValue ENABLES_SNEAKING_NO_BACKOFF_SWITCH;
+    private static final ForgeConfigSpec.BooleanValue ENABLES_BLADE_NO_SLOW_DOWN;
     public static final ForgeConfigSpec SPEC;
 
     static {
@@ -73,6 +74,9 @@ public class Config {
         // 开启潜行时无保护切换功能？
         ENABLES_SNEAKING_NO_BACKOFF_SWITCH = builder.comment("Enable the sneaking no back-off switch?[Default:true]")
                 .define("enablesSneakingNoBackOffSwitch", true);
+        // 开启冻结玩家功能？
+        ENABLES_BLADE_NO_SLOW_DOWN = builder.comment("Enable blade no slow down?[Default:true]")
+                .define("enablesBladeNoSlowDown", true);
         builder.pop();
         SPEC = builder.build();
     }
@@ -92,6 +96,7 @@ public class Config {
     public static boolean enablesBindOwner;
     public static boolean enablesSRankBoost;
     public static boolean enablesSneakingNoBackOffSwitch;
+    public static boolean enablesBladeNoSlowDown;
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
@@ -111,5 +116,6 @@ public class Config {
         enablesBindOwner = ENABLES_BIND_OWNER.get();
         enablesSRankBoost = ENABLES_S_RANK_BOOST.get();
         enablesSneakingNoBackOffSwitch = ENABLES_SNEAKING_NO_BACKOFF_SWITCH.get();
+        enablesBladeNoSlowDown = ENABLES_BLADE_NO_SLOW_DOWN.get();
     }
 }

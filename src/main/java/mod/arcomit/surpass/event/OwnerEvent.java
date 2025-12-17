@@ -176,7 +176,9 @@ public class OwnerEvent {
             }
             return;
         }
-        tag.putBoolean("Surpass.oldSealed",bladeState.isSealed());
+        if (!tag.contains("Surpass.oldSealed")) {
+            tag.putBoolean("Surpass.oldSealed",bladeState.isSealed());
+        }
         bladeState.setSealed(true);
     }
 }

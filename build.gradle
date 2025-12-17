@@ -97,6 +97,8 @@ dependencies {
     //拔刀剑：重锋
     implementation fg.deobf("curse.maven:slashblade-resharped-1022428:7194599")
     implementation fg.deobf("curse.maven:the-twilight-forest-227639:5468648")
+
+    implementation fg.deobf("curse.maven:nbtedit-reborn-678133:5984630")
 }
 // This block of code expands all declared replace properties in the specified resource targets.
 // A missing property will result in an error. Properties are expanded using ${} Groovy notation.
