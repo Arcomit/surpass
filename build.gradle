@@ -92,13 +92,20 @@ repositories {
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-
-    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    implementation fg.deobf("curse.maven:configured-457570:5180900")
     //拔刀剑：重锋
     implementation fg.deobf("curse.maven:slashblade-resharped-1022428:7194599")
     implementation fg.deobf("curse.maven:the-twilight-forest-227639:5468648")
 
     implementation fg.deobf("curse.maven:nbtedit-reborn-678133:5984630")
+
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    annotationProcessor "io.github.llamalad7:mixinextras-common:0.5.0"
+
+    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.5.0"))
+    implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.5.0")) {
+        jarJar.ranged(it, "[0.5.0,)")
+    }
 }
 // This block of code expands all declared replace properties in the specified resource targets.
 // A missing property will result in an error. Properties are expanded using ${} Groovy notation.

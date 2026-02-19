@@ -13,8 +13,13 @@ public class ConfigSyncPacket {
     private boolean enablesSneakingNoBackOff;
 
     public ConfigSyncPacket() {
-        enablesEnemyLockOn = ClientConfig.ENABLES_ENEMY_LOCKON.get();
-        enablesSneakingNoBackOff = ClientConfig.ENABLES_SNEAKING_NO_BACKOFF.get();
+        if(ClientConfig.ENABLES_ENEMY_LOCKON != null) enablesEnemyLockOn = ClientConfig.ENABLES_ENEMY_LOCKON.get();
+        if(ClientConfig.ENABLES_SNEAKING_NO_BACKOFF != null) enablesSneakingNoBackOff = ClientConfig.ENABLES_SNEAKING_NO_BACKOFF.get();
+    }
+
+    public ConfigSyncPacket(boolean enablesEnemyLockOn, boolean enablesSneakingNoBackOff) {
+        this.enablesEnemyLockOn = enablesEnemyLockOn;
+        this.enablesSneakingNoBackOff = enablesSneakingNoBackOff;
     }
 
     public boolean getEnablesEnemyLockOn() {
@@ -31,7 +36,7 @@ public class ConfigSyncPacket {
     }
 
     public static ConfigSyncPacket decode(FriendlyByteBuf buffer) {
-        return new ConfigSyncPacket();
+        return new ConfigSyncPacket(buffer.readBoolean(), buffer.readBoolean());
     }
 
     // 处理器类
